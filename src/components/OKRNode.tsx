@@ -92,9 +92,9 @@ const OKRNode: React.FC<OKRNodeProps> = ({ data }) => {
       
       {/* Header */}
       <div className={`bg-gradient-to-r ${getLevelColor(data.level)} text-white p-4 rounded-t-xl`}>
-        <div className="flex items-center justify-between mb-3">
+        <div className="mb-3">
           {/* Avatar - Title - Icon layout */}
-          <div className="flex items-start space-x-3 flex-1">
+          <div className="flex items-start justify-between mb-2">
             {/* Avatar with tooltip */}
             <div 
               className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0 cursor-help"
@@ -105,26 +105,26 @@ const OKRNode: React.FC<OKRNodeProps> = ({ data }) => {
               </span>
             </div>
             
-            {/* Title - allows wrapping */}
-            <div className="flex-1 min-w-0 pr-3">
+            {/* Title and Icon container */}
+            <div className="flex items-start justify-between flex-1 min-w-0 ml-3">
               <h3 className="font-bold text-lg leading-tight break-words">{data.title}</h3>
-            </div>
-            
-            {/* Level Icon with tooltip */}
-            <div 
-              className="flex-shrink-0 cursor-help"
-              title={data.level === 'individual' ? 'Cá nhân' : 
-                     data.level === 'department' ? 'Phòng ban' : 'Công ty'}
-            >
-              {getLevelIcon(data.level)}
+              
+              {/* Level Icon with tooltip */}
+              <div 
+                className="flex-shrink-0 cursor-help ml-3"
+                title={data.level === 'individual' ? 'Cá nhân' : 
+                       data.level === 'department' ? 'Phòng ban' : 'Công ty'}
+              >
+                {getLevelIcon(data.level)}
+              </div>
             </div>
           </div>
           
-          {/* Department badge */}
+          {/* Department/Team line */}
           {data.department && (
-            <span className="text-xs bg-white/20 px-2 py-1 rounded-full">
+            <div className="text-sm text-white/90 ml-13">
               {data.department}
-            </span>
+            </div>
           )}
         </div>
       </div>
