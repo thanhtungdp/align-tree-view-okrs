@@ -126,7 +126,7 @@ const OKRNode: React.FC<OKRNodeProps> = ({ data, onAddChild }) => {
             <span>Chi tiết {expanded ? 'ít hơn' : 'thêm'}</span>
           </button>
           
-          {canHaveChildren && onAddChild && (
+          {canHaveChildren && (
             <button
               onClick={() => onAddChild(data.id)}
               className="flex items-center space-x-2 px-3 py-1.5 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors"
