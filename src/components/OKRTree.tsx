@@ -11,7 +11,7 @@ import ReactFlow, {
   Position
 } from 'reactflow';
 import dagre from 'dagre';
-import { OKRData } from '../types/okr';
+import { QuarterlyOKRData } from '../types/okr';
 import OKRNode from './OKRNode';
 import AddNodeModal from './AddNodeModal';
 import { RotateCcw, Move3D, ArrowUpDown, ArrowLeftRight } from 'lucide-react';
@@ -24,8 +24,8 @@ const nodeTypes = {
 };
 
 interface OKRTreeProps {
-  data: OKRData;
-  onDataChange?: (newData: OKRData) => void;
+  data: QuarterlyOKRData;
+  onDataChange?: (newData: QuarterlyOKRData) => void;
 }
 
 const OKRTree: React.FC<OKRTreeProps> = ({ data, onDataChange }) => {

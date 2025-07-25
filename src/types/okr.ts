@@ -15,6 +15,23 @@ export interface OKRAction {
   assignee?: string;
 }
 
+export interface TimeFrame {
+  type: 'annual' | 'quarterly' | 'monthly';
+  year: number;
+  quarter?: 1 | 2 | 3 | 4;
+  startDate: string;
+  endDate: string;
+}
+
+export interface HistoricalProgress {
+  quarter: number;
+  year: number;
+  progress: number;
+  metrics: OKRMetric[];
+  completedActions: number;
+  totalActions: number;
+}
+
 export interface OKRObjective {
   id: string;
   title: string;
@@ -27,9 +44,21 @@ export interface OKRObjective {
   actions: OKRAction[];
   parentId?: string;
   childrenIds: string[];
+  timeframe: TimeFrame;
+  parentObjectiveId?: string; // Link to annual objective
+  continuationOf?: string; // Link to previous quarter's same objective
+  historicalProgress?: HistoricalProgress[];
+}
+
+export interface QuarterlyOKRData {
+  objectives: Record<string, OKRObjective>;
+  connections: Array<{ from: string; to: string }>;
+  quarter: number;
+  year: number;
 }
 
 export interface OKRData {
-  objectives: Record<string, OKRObjective>;
-  connections: Array<{ from: string; to: string }>;
+  currentQuarter: number;
+  currentYear: number;
+  quarters: Record<string, QuarterlyOKRData>; // key: "2025-Q1"
 }
