@@ -93,12 +93,22 @@ const OKRNode: React.FC<OKRNodeProps> = ({ data }) => {
       {/* Header */}
       <div className={`bg-gradient-to-r ${getLevelColor(data.level)} text-white p-4 rounded-t-xl`}>
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-3">
+            {/* Avatar */}
+            <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
+              <span className="text-white font-semibold text-sm">
+                {data.owner.split(' ').map(name => name.charAt(0)).join('').slice(0, 2)}
+              </span>
+            </div>
+            
+            {/* Level Icon and Label */}
+            <div className="flex items-center space-x-2">
             {getLevelIcon(data.level)}
             <span className="font-semibold text-sm uppercase tracking-wide">
               {data.level === 'individual' ? 'Cá nhân' : 
                data.level === 'department' ? 'Phòng ban' : 'Công ty'}
             </span>
+            </div>
           </div>
           {data.department && (
             <span className="text-xs bg-white/20 px-2 py-1 rounded-full">
@@ -106,8 +116,12 @@ const OKRNode: React.FC<OKRNodeProps> = ({ data }) => {
             </span>
           )}
         </div>
-        <h3 className="font-bold text-lg mt-2 leading-tight">{data.title}</h3>
-        <p className="text-sm opacity-90 mt-1">{data.owner}</p>
+        
+        {/* Title and Owner */}
+        <div className="mt-3 ml-13">
+          <h3 className="font-bold text-lg leading-tight">{data.title}</h3>
+          <p className="text-sm opacity-90 mt-1">{data.owner}</p>
+        </div>
       </div>
 
       {/* Progress Bar */}
