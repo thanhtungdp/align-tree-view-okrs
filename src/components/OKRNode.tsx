@@ -11,7 +11,7 @@ import {
   ChevronRight,
   CheckCircle,
   Clock,
-  AlertCircle
+  AlertCircle,
   Plus
 } from 'lucide-react';
 
