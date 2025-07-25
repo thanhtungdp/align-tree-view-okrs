@@ -3,7 +3,6 @@ import { Lightbulb } from 'lucide-react';
 import Header from './components/Header';
 import OKRTree from './components/OKRTree';
 import SidebarOverlay from './components/SidebarOverlay';
-import QuarterSelector from './components/QuarterSelector';
 import ProgressTimeline from './components/ProgressTimeline';
 import { okrData as initialOKRData } from './data/okrData';
 import { OKRData, QuarterlyOKRData } from './types/okr';
@@ -58,6 +57,8 @@ function App() {
         currentYear={okrData.currentYear}
         selectedQuarter={selectedQuarter}
         overallProgress={calculateOverallProgress()}
+        availableQuarters={availableQuarters}
+        onQuarterChange={handleQuarterChange}
       />
       
       <div className="relative">
@@ -70,21 +71,10 @@ function App() {
           <Lightbulb className="w-5 h-5" />
         </button>
 
-        {/* Quarter Selector */}
-        <div className="fixed top-20 right-4 z-30 w-80">
-          <QuarterSelector
-            currentQuarter={okrData.currentQuarter}
-            currentYear={okrData.currentYear}
-            availableQuarters={availableQuarters}
-            onQuarterChange={handleQuarterChange}
-            selectedQuarter={selectedQuarter}
-          />
-        </div>
-
         {/* Timeline Toggle */}
         <button
           onClick={() => setShowTimeline(!showTimeline)}
-          className="fixed top-80 right-4 z-30 bg-white text-gray-700 p-3 rounded-full shadow-lg hover:bg-gray-50 transition-all duration-200 hover:scale-105"
+          className="fixed top-20 right-4 z-30 bg-white text-gray-700 p-3 rounded-full shadow-lg hover:bg-gray-50 transition-all duration-200 hover:scale-105"
           title="Progress Timeline"
         >
           <span className="text-sm font-medium">Timeline</span>
@@ -92,7 +82,7 @@ function App() {
 
         {/* Progress Timeline */}
         {showTimeline && (
-          <div className="fixed top-96 right-4 z-30 w-80 max-h-96 overflow-y-auto">
+          <div className="fixed top-32 right-4 z-30 w-80 max-h-96 overflow-y-auto">
             {getObjectivesWithHistory().map((objective) => (
               <ProgressTimeline
                 key={objective.id}
