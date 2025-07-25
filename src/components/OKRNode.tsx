@@ -17,6 +17,7 @@ import {
 
 interface OKRNodeProps {
   data: OKRObjective & {
+    layoutDirection?: 'TB' | 'LR';
     onAddChild?: (nodeId: string) => void;
     onExpansionChange?: (nodeId: string, isExpanded: boolean) => void;
   };
@@ -79,12 +80,13 @@ const OKRNode: React.FC<OKRNodeProps> = ({ data }) => {
   };
 
   const canHaveChildren = data.level !== 'individual';
+  const isHorizontal = data.layoutDirection === 'LR';
   
   return (
     <div className="bg-white rounded-xl shadow-lg border border-gray-200 min-w-[320px] max-w-[400px]">
       <Handle
         type="target"
-        position={Position.Top}
+        position={isHorizontal ? Position.Left : Position.Top}
         className="w-3 h-3 !bg-gray-400"
       />
       
@@ -218,7 +220,7 @@ const OKRNode: React.FC<OKRNodeProps> = ({ data }) => {
 
       <Handle
         type="source"
-        position={Position.Bottom}
+        position={isHorizontal ? Position.Right : Position.Bottom}
         className="w-3 h-3 !bg-gray-400"
       />
     </div>

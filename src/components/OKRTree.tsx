@@ -59,8 +59,6 @@ const OKRTree: React.FC<OKRTreeProps> = ({ data, onDataChange }) => {
         type: 'okrNode',
         data: objective,
         position: { x: 0, y: 0 },
-        sourcePosition: direction === 'LR' ? Position.Right : Position.Bottom,
-        targetPosition: direction === 'LR' ? Position.Left : Position.Top,
       };
     });
 
@@ -203,11 +201,12 @@ const OKRTree: React.FC<OKRTreeProps> = ({ data, onDataChange }) => {
       ...node,
       data: {
         ...node.data,
+        layoutDirection,
         onAddChild: handleAddChild,
         onExpansionChange: handleNodeExpansion
       }
     }));
-  }, [nodes, handleAddChild, handleNodeExpansion]);
+  }, [nodes, layoutDirection, handleAddChild, handleNodeExpansion]);
 
   return (
     <div className="w-full h-full">
