@@ -96,9 +96,8 @@ const AddNodeModal: React.FC<AddNodeModalProps> = ({ isOpen, onClose, onAdd, par
       })),
       actions: actions.map((action, index) => ({
         ...action,
-      ...data,
-      objectives: updatedObjectives,
-      connections: updatedConnections
+        id: `a${Date.now()}-${index}`
+      }))
     };
 
     onAdd(newObjective);
