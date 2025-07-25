@@ -16,7 +16,10 @@ import {
 } from 'lucide-react';
 
 interface OKRNodeProps {
-  data: OKRObjective;
+  data: OKRObjective & {
+    onAddChild?: (nodeId: string) => void;
+    onExpansionChange?: (nodeId: string, isExpanded: boolean) => void;
+  };
 }
 
 const OKRNode: React.FC<OKRNodeProps> = ({ data }) => {
@@ -76,6 +79,7 @@ const OKRNode: React.FC<OKRNodeProps> = ({ data }) => {
   };
 
   const canHaveChildren = data.level !== 'individual';
+  
   return (
     <div className="bg-white rounded-xl shadow-lg border border-gray-200 min-w-[320px] max-w-[400px]">
       <Handle

@@ -7,7 +7,8 @@ import ReactFlow, {
   useNodesState,
   useEdgesState,
   MarkerType,
-  ReactFlowProvider
+  ReactFlowProvider,
+  Position
 } from 'reactflow';
 import dagre from 'dagre';
 import { OKRData } from '../types/okr';
@@ -38,22 +39,30 @@ const OKRTree: React.FC<OKRTreeProps> = ({ data, onDataChange }) => {
     dagreGraph.setDefaultEdgeLabel(() => ({}));
 
     const nodeWidth = 360;
-    const nodeHeight = 300;
+    const baseNodeHeight = 300;
+    const expandedNodeHeight = 500;
 
     dagreGraph.setGraph({ 
       rankdir: direction,
-      nodesep: 50,
-      ranksep: 100,
+      nodesep: direction === 'LR' ? 80 : 50,
+      ranksep: direction === 'LR' ? 150 : 100,
       marginx: 20,
       marginy: 20
     });
 
-    const nodes: Node[] = Object.values(data.objectives).map((objective) => ({
-      id: objective.id,
-      type: 'okrNode',
-      data: objective,
-      position: { x: 0, y: 0 },
-    }));
+    const nodes: Node[] = Object.values(data.objectives).map((objective) => {
+      const isExpanded = expandedNodes.has(objective.id);
+      const nodeHeight = isExpanded ? expandedNodeHeight : baseNodeHeight;
+      
+      return {
+        id: objective.id,
+        type: 'okrNode',
+        data: objective,
+        position: { x: 0, y: 0 },
+        sourcePosition: direction === 'LR' ? Position.Right : Position.Bottom,
+        targetPosition: direction === 'LR' ? Position.Left : Position.Top,
+      };
+    });
 
     const edges: Edge[] = data.connections.map((connection, index) => ({
       id: `edge-${index}`,
@@ -72,6 +81,8 @@ const OKRTree: React.FC<OKRTreeProps> = ({ data, onDataChange }) => {
     }));
 
     nodes.forEach((node) => {
+      const isExpanded = expandedNodes.has(node.id);
+      const nodeHeight = isExpanded ? expandedNodeHeight : baseNodeHeight;
       dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
     });
 
@@ -83,6 +94,9 @@ const OKRTree: React.FC<OKRTreeProps> = ({ data, onDataChange }) => {
 
     const layoutedNodes = nodes.map((node) => {
       const nodeWithPosition = dagreGraph.node(node.id);
+      const isExpanded = expandedNodes.has(node.id);
+      const nodeHeight = isExpanded ? expandedNodeHeight : baseNodeHeight;
+      
       return {
         ...node,
         position: {
@@ -93,7 +107,7 @@ const OKRTree: React.FC<OKRTreeProps> = ({ data, onDataChange }) => {
     });
 
     return { nodes: layoutedNodes, edges };
-  }, [data]);
+  }, [data, expandedNodes]);
 
   const { nodes: initialNodes, edges: initialEdges } = useMemo(
     () => getLayoutedElements(layoutDirection),
@@ -150,6 +164,7 @@ const OKRTree: React.FC<OKRTreeProps> = ({ data, onDataChange }) => {
     setShowAddModal(false);
     setSelectedParentNode(null);
   }, [selectedParentNode, data, onDataChange]);
+
   const onLayout = useCallback(
     (direction: 'TB' | 'LR') => {
       setLayoutDirection(direction);
@@ -161,10 +176,11 @@ const OKRTree: React.FC<OKRTreeProps> = ({ data, onDataChange }) => {
   );
 
   const onResetView = useCallback(() => {
-    setNodes(initialNodes);
-    setEdges(initialEdges);
     setExpandedNodes(new Set());
-  }, [initialNodes, initialEdges, setNodes, setEdges]);
+    const layouted = getLayoutedElements(layoutDirection);
+    setNodes([...layouted.nodes]);
+    setEdges([...layouted.edges]);
+  }, [layoutDirection, getLayoutedElements, setNodes, setEdges]);
 
   const handleNodeExpansion = useCallback((nodeId: string, isExpanded: boolean) => {
     const newExpandedNodes = new Set(expandedNodes);
@@ -192,6 +208,7 @@ const OKRTree: React.FC<OKRTreeProps> = ({ data, onDataChange }) => {
       }
     }));
   }, [nodes, handleAddChild, handleNodeExpansion]);
+
   return (
     <div className="w-full h-full">
       <ReactFlow
