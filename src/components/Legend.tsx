@@ -113,6 +113,7 @@ const Legend: React.FC = () => {
         </div>
       </div>
     </div>
+  )
   );
 };
 
