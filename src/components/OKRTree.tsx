@@ -97,11 +97,18 @@ const OKRTree: React.FC<OKRTreeProps> = ({ data, onDataChange }) => {
 
   const { nodes: initialNodes, edges: initialEdges } = useMemo(
     () => getLayoutedElements(layoutDirection),
-    [getLayoutedElements, layoutDirection]
+    [getLayoutedElements, layoutDirection, data]
   );
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  // Update nodes and edges when data changes
+  React.useEffect(() => {
+    const layouted = getLayoutedElements(layoutDirection);
+    setNodes([...layouted.nodes]);
+    setEdges([...layouted.edges]);
+  }, [data, layoutDirection, getLayoutedElements, setNodes, setEdges]);
 
   const handleAddChild = useCallback((parentId: string) => {
     const parentNode = data.objectives[parentId];
