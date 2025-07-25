@@ -325,34 +325,34 @@ const OKRTree: React.FC<OKRTreeProps> = ({ data }) => {
           </div>
           
           {/* Layout Controls */}
-          <button
-            onClick={() => onLayout('TB')}
-            className={`px-4 py-2 rounded-lg shadow-lg flex items-center space-x-2 transition-all ${
-              layoutDirection === 'TB'
-                ? 'bg-blue-600 text-white'
-                : 'bg-white text-gray-700 hover:bg-gray-50'
-            }`}
-            title="Vertical Layout"
-          >
-            <ArrowUpDown className="w-4 h-4" />
-            <span className="text-sm font-medium">Dọc</span>
-          </button>
-          
-          <button
-            onClick={() => onLayout('LR')}
-            className={`px-4 py-2 rounded-lg shadow-lg flex items-center space-x-2 transition-all ${
-              layoutDirection === 'LR'
-                ? 'bg-blue-600 text-white'
-                : 'bg-white text-gray-700 hover:bg-gray-50'
-            }`}
-            title="Horizontal Layout"
-          >
-            <ArrowLeftRight className="w-4 h-4" />
-            <span className="text-sm font-medium">Ngang</span>
-          </button>
+          <div className="flex space-x-2">
+            <button
+              onClick={() => onLayout('TB')}
+              className={`px-4 py-2 rounded-lg shadow-lg flex items-center space-x-2 transition-all ${
+                layoutDirection === 'TB'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-white text-gray-700 hover:bg-gray-50'
+              }`}
+              title="Vertical Layout"
+            >
+              <ArrowUpDown className="w-4 h-4" />
+              <span className="text-sm font-medium">Dọc</span>
+            </button>
+            
+            <button
+              onClick={() => onLayout('LR')}
+              className={`px-4 py-2 rounded-lg shadow-lg flex items-center space-x-2 transition-all ${
+                layoutDirection === 'LR'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-white text-gray-700 hover:bg-gray-50'
+              }`}
+              title="Horizontal Layout"
+            >
+              <ArrowLeftRight className="w-4 h-4" />
+              <span className="text-sm font-medium">Ngang</span>
+            </button>
           </div>
           
-          <div className="flex space-x-2">
           <button
             onClick={onResetView}
             className="px-4 py-2 bg-white text-gray-700 rounded-lg shadow-lg hover:bg-gray-50 flex items-center space-x-2 transition-all"
@@ -361,7 +361,6 @@ const OKRTree: React.FC<OKRTreeProps> = ({ data }) => {
             <RotateCcw className="w-4 h-4" />
             <span className="text-sm font-medium">Reset</span>
           </button>
-        </div>
         </div>
       </ReactFlow>
     </div>
