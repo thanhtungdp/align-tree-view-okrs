@@ -92,24 +92,35 @@ const OKRNode: React.FC<OKRNodeProps> = ({ data }) => {
       
       {/* Header */}
       <div className={`bg-gradient-to-r ${getLevelColor(data.level)} text-white p-4 rounded-t-xl`}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            {/* Avatar */}
-            <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
+        <div className="flex items-center justify-between mb-3">
+          {/* Avatar - Title - Icon on one line */}
+          <div className="flex items-center space-x-3 flex-1">
+            {/* Avatar with tooltip */}
+            <div 
+              className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0 cursor-help"
+              title={data.owner}
+            >
               <span className="text-white font-semibold text-sm">
                 {data.owner.split(' ').map(name => name.charAt(0)).join('').slice(0, 2)}
               </span>
             </div>
             
-            {/* Level Icon and Label */}
-            <div className="flex items-center space-x-2">
-            {getLevelIcon(data.level)}
-            <span className="font-semibold text-sm uppercase tracking-wide">
-              {data.level === 'individual' ? 'Cá nhân' : 
-               data.level === 'department' ? 'Phòng ban' : 'Công ty'}
-            </span>
+            {/* Title */}
+            <div className="flex-1 min-w-0">
+              <h3 className="font-bold text-lg leading-tight truncate">{data.title}</h3>
+            </div>
+            
+            {/* Level Icon with tooltip */}
+            <div 
+              className="flex-shrink-0 cursor-help"
+              title={data.level === 'individual' ? 'Cá nhân' : 
+                     data.level === 'department' ? 'Phòng ban' : 'Công ty'}
+            >
+              {getLevelIcon(data.level)}
             </div>
           </div>
+          
+          {/* Department badge */}
           {data.department && (
             <span className="text-xs bg-white/20 px-2 py-1 rounded-full">
               {data.department}
@@ -117,10 +128,9 @@ const OKRNode: React.FC<OKRNodeProps> = ({ data }) => {
           )}
         </div>
         
-        {/* Title and Owner */}
-        <div className="mt-3 ml-13">
-          <h3 className="font-bold text-lg leading-tight">{data.title}</h3>
-          <p className="text-sm opacity-90 mt-1">{data.owner}</p>
+        {/* Owner */}
+        <div>
+          <p className="text-sm opacity-90">{data.owner}</p>
         </div>
       </div>
 
