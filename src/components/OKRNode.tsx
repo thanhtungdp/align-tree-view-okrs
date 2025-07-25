@@ -17,11 +17,17 @@ import {
 
 interface OKRNodeProps {
   data: OKRObjective;
-  onAddChild?: (parentId: string) => void;
 }
 
-const OKRNode: React.FC<OKRNodeProps> = ({ data, onAddChild }) => {
+const OKRNode: React.FC<OKRNodeProps> = ({ data }) => {
   const [expanded, setExpanded] = useState(false);
+
+  const handleExpansionChange = (newExpanded: boolean) => {
+    setExpanded(newExpanded);
+    if (data.onExpansionChange) {
+      data.onExpansionChange(data.id, newExpanded);
+    }
+  };
 
   const getLevelIcon = (level: string) => {
     switch (level) {
@@ -119,7 +125,7 @@ const OKRNode: React.FC<OKRNodeProps> = ({ data, onAddChild }) => {
         {/* Action Buttons */}
         <div className="flex items-center justify-between mb-3">
           <button
-            onClick={() => setExpanded(!expanded)}
+            onClick={() => handleExpansionChange(!expanded)}
             className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-medium text-sm transition-colors"
           >
             {expanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
@@ -128,7 +134,7 @@ const OKRNode: React.FC<OKRNodeProps> = ({ data, onAddChild }) => {
           
           {canHaveChildren && (
             <button
-              onClick={() => onAddChild(data.id)}
+              onClick={() => data.onAddChild && data.onAddChild(data.id)}
               className="flex items-center space-x-2 px-3 py-1.5 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors"
               title="Thêm mục tiêu con"
             >
