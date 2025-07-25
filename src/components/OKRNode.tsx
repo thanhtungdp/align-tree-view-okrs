@@ -12,13 +12,15 @@ import {
   CheckCircle,
   Clock,
   AlertCircle
+  Plus
 } from 'lucide-react';
 
 interface OKRNodeProps {
   data: OKRObjective;
+  onAddChild?: (parentId: string) => void;
 }
 
-const OKRNode: React.FC<OKRNodeProps> = ({ data }) => {
+const OKRNode: React.FC<OKRNodeProps> = ({ data, onAddChild }) => {
   const [expanded, setExpanded] = useState(false);
 
   const getLevelIcon = (level: string) => {
@@ -67,6 +69,7 @@ const OKRNode: React.FC<OKRNodeProps> = ({ data }) => {
     return 'bg-red-500';
   };
 
+  const canHaveChildren = data.level !== 'individual';
   return (
     <div className="bg-white rounded-xl shadow-lg border border-gray-200 min-w-[320px] max-w-[400px]">
       <Handle
@@ -113,14 +116,27 @@ const OKRNode: React.FC<OKRNodeProps> = ({ data }) => {
       <div className="p-4">
         <p className="text-gray-600 text-sm mb-4 leading-relaxed">{data.description}</p>
 
-        {/* Toggle Button */}
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-medium text-sm mb-3 transition-colors"
-        >
-          {expanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
-          <span>Chi tiết {expanded ? 'ít hơn' : 'thêm'}</span>
-        </button>
+        {/* Action Buttons */}
+        <div className="flex items-center justify-between mb-3">
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="flex items-center space-x-2 text-blue-600 hover:text-blue-700 font-medium text-sm transition-colors"
+          >
+            {expanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+            <span>Chi tiết {expanded ? 'ít hơn' : 'thêm'}</span>
+          </button>
+          
+          {canHaveChildren && onAddChild && (
+            <button
+              onClick={() => onAddChild(data.id)}
+              className="flex items-center space-x-2 px-3 py-1.5 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors"
+              title="Thêm mục tiêu con"
+            >
+              <Plus className="w-3 h-3" />
+              <span>Thêm con</span>
+            </button>
+          )}
+        </div>
 
         {expanded && (
           <div className="space-y-4 animate-fadeIn">

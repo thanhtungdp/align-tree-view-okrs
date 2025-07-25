@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Header from './components/Header';
 import OKRTree from './components/OKRTree';
 import Legend from './components/Legend';
-import { okrData } from './data/okrData';
+import { okrData as initialOKRData } from './data/okrData';
+import { OKRData } from './types/okr';
 
 function App() {
+  const [okrData, setOkrData] = useState<OKRData>(initialOKRData);
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -27,7 +30,7 @@ function App() {
         
         {/* Main Content */}
         <div className="flex-1 h-screen">
-          <OKRTree data={okrData} />
+          <OKRTree data={okrData} onDataChange={setOkrData} />
         </div>
       </div>
     </div>

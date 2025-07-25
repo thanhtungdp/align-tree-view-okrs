@@ -12,7 +12,9 @@ import ReactFlow, {
 import dagre from 'dagre';
 import { OKRData } from '../types/okr';
 import OKRNode from './OKRNode';
+import AddNodeModal from './AddNodeModal';
 import { RotateCcw, Move3D, ArrowUpDown, ArrowLeftRight } from 'lucide-react';
+import { OKRObjective } from '../types/okr';
 
 import 'reactflow/dist/style.css';
 
@@ -22,10 +24,14 @@ const nodeTypes = {
 
 interface OKRTreeProps {
   data: OKRData;
+  onDataChange?: (newData: OKRData) => void;
 }
 
-const OKRTree: React.FC<OKRTreeProps> = ({ data }) => {
+const OKRTree: React.FC<OKRTreeProps> = ({ data, onDataChange }) => {
   const [layoutDirection, setLayoutDirection] = useState<'TB' | 'LR'>('TB');
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [selectedParentNode, setSelectedParentNode] = useState<OKRObjective | null>(null);
+  const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set());
 
   const getLayoutedElements = useCallback((direction: 'TB' | 'LR') => {
     const dagreGraph = new dagre.graphlib.Graph();
@@ -97,6 +103,46 @@ const OKRTree: React.FC<OKRTreeProps> = ({ data }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
+  const handleAddChild = useCallback((parentId: string) => {
+    const parentNode = data.objectives[parentId];
+    if (parentNode) {
+      setSelectedParentNode(parentNode);
+      setShowAddModal(true);
+    }
+  }, [data.objectives]);
+
+  const handleAddNode = useCallback((newObjective: Omit<OKRObjective, 'id' | 'childrenIds'>) => {
+    if (!selectedParentNode || !onDataChange) return;
+
+    const newId = `${newObjective.level}-${Date.now()}`;
+    const newOKRObjective: OKRObjective = {
+      ...newObjective,
+      id: newId,
+      childrenIds: []
+    };
+
+    // Update data
+    const updatedObjectives = {
+      ...data.objectives,
+      [newId]: newOKRObjective,
+      [selectedParentNode.id]: {
+        ...selectedParentNode,
+        childrenIds: [...selectedParentNode.childrenIds, newId]
+      }
+    };
+
+    const newConnection = { from: selectedParentNode.id, to: newId };
+    const updatedConnections = [...data.connections, newConnection];
+
+    const newData: OKRData = {
+      objectives: updatedObjectives,
+      connections: updatedConnections
+    };
+
+    onDataChange(newData);
+    setShowAddModal(false);
+    setSelectedParentNode(null);
+  }, [selectedParentNode, data, onDataChange]);
   const onLayout = useCallback(
     (direction: 'TB' | 'LR') => {
       setLayoutDirection(direction);
@@ -110,12 +156,39 @@ const OKRTree: React.FC<OKRTreeProps> = ({ data }) => {
   const onResetView = useCallback(() => {
     setNodes(initialNodes);
     setEdges(initialEdges);
+    setExpandedNodes(new Set());
   }, [initialNodes, initialEdges, setNodes, setEdges]);
 
+  const handleNodeExpansion = useCallback((nodeId: string, isExpanded: boolean) => {
+    const newExpandedNodes = new Set(expandedNodes);
+    if (isExpanded) {
+      newExpandedNodes.add(nodeId);
+    } else {
+      newExpandedNodes.delete(nodeId);
+    }
+    setExpandedNodes(newExpandedNodes);
+
+    // Trigger re-layout
+    const layouted = getLayoutedElements(layoutDirection);
+    setNodes([...layouted.nodes]);
+    setEdges([...layouted.edges]);
+  }, [expandedNodes, layoutDirection, getLayoutedElements, setNodes, setEdges]);
+
+  // Update nodes with onAddChild callback
+  const nodesWithCallbacks = useMemo(() => {
+    return nodes.map(node => ({
+      ...node,
+      data: {
+        ...node.data,
+        onAddChild: handleAddChild,
+        onExpansionChange: handleNodeExpansion
+      }
+    }));
+  }, [nodes, handleAddChild, handleNodeExpansion]);
   return (
     <div className="w-full h-full">
       <ReactFlow
-        nodes={nodes}
+        nodes={nodesWithCallbacks}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
@@ -165,6 +238,19 @@ const OKRTree: React.FC<OKRTreeProps> = ({ data }) => {
           </button>
         </div>
       </ReactFlow>
+      
+      {/* Add Node Modal */}
+      {selectedParentNode && (
+        <AddNodeModal
+          isOpen={showAddModal}
+          onClose={() => {
+            setShowAddModal(false);
+            setSelectedParentNode(null);
+          }}
+          onAdd={handleAddNode}
+          parentNode={selectedParentNode}
+        />
+      )}
     </div>
   );
 };
