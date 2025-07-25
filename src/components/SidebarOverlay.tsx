@@ -99,15 +99,15 @@ const SidebarOverlay: React.FC<SidebarOverlayProps> = ({ isOpen, onClose }) => {
               <ul className="space-y-2 text-sm text-gray-600">
                 <li className="flex items-start">
                   <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                  Click vào nút "Chi tiết thêm" để xem metrics và actions
+                  Click vào nút "Chi tiết thêm\" để xem metrics và actions
                 </li>
                 <li className="flex items-start">
                   <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                  Sử dụng nút "Dọc/Ngang" để thay đổi layout
+                  Sử dụng nút "Dọc/Ngang\" để thay đổi layout
                 </li>
                 <li className="flex items-start">
                   <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                  Click "Thêm con" để tạo mục tiêu con
+                  Click "Thêm con\" để tạo mục tiêu con
                 </li>
                 <li className="flex items-start">
                   <span className="w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3 flex-shrink-0"></span>
