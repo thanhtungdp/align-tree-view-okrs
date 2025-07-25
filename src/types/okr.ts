@@ -15,22 +15,6 @@ export interface OKRAction {
   assignee?: string;
 }
 
-export interface Session {
-  id: string;
-  title: string;
-  type: 'year' | 'quarter';
-  startDate: string;
-  endDate: string;
-  parentSessionId?: string;
-  isActive: boolean;
-}
-
-export interface Team {
-  id: string;
-  name: string;
-  leadership: boolean;
-}
-
 export interface OKRObjective {
   id: string;
   title: string;
@@ -43,15 +27,9 @@ export interface OKRObjective {
   actions: OKRAction[];
   parentId?: string;
   childrenIds: string[];
-  sessionId: string;
-  teamId: string;
 }
 
 export interface OKRData {
   objectives: Record<string, OKRObjective>;
   connections: Array<{ from: string; to: string }>;
-  sessions: Record<string, Session>;
-  teams: Record<string, Team>;
-  activeSessionId: string;
-  currentTeamId: string;
 }
